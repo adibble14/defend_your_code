@@ -25,5 +25,11 @@ def integer_regex(str):
     if result == None:
         return None
     return result.group(0)
-    
+
+def file_name_regex(str):
+    regex = '^\w{1,20}\.txt$'
+    result = re.search(regex, str)
+    if result == None:
+        return None
+    return result.group(0)
     
