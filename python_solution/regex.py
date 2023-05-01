@@ -32,4 +32,12 @@ def file_name_regex(str):
     if result == None:
         return None
     return result.group(0)
+
+def password_regex(str):
+    regex = '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?![a-z]{4,}).{10,}$'
+    result = re.search(regex, str)
+    if result == None:
+        return None
+    return result.group(0)
+
     
