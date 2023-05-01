@@ -36,12 +36,14 @@ public class main {
         System.out.println();
 
         boolean correctLName = false;
+        System.out.println("Enter Last Name: ");
         while(!correctLName) {
-            System.out.println("Enter Last Name: ");
             String lName = input.nextLine();
             correctLName = patternMatcherHelper(lName, "^([A-Za-z] ?){1,50}$");
             if (correctLName){
                 System.out.println("User Last Name Input: " + lName);
+            }else if(!Objects.equals(lName, "")){
+                System.out.println("Enter Last Name: ");
             }
         }
         System.out.println();
