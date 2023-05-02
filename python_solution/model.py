@@ -1,5 +1,6 @@
 from logger import logging
 import regex
+import hasher
 
 
 
@@ -73,7 +74,11 @@ class Model():
 
     def set_output_file_name(self):
         logging.info("Setting output file name.")
-        self.output_file_name = self.output_file_name()
+        res = self.output_file_name()
+        if self.input_file_name == self.output_file_name:
+            logging.info("output file name is same as input file name. Asking user again for output file name.")
+            self.set_output_file_name()
+        self.output_file_name = res
 
     def file_name_helper(self):
         print("File Name not to exceed 20 symbols. Only alphabet, numbers, undersore accepted. Case insensitive. Only .txt files accepted")
