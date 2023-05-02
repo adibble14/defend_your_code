@@ -1,7 +1,17 @@
-import java.util.Objects;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.bind.DatatypeConverter;
 
 
 /**
@@ -117,32 +127,81 @@ public class main {
         }
     }
 
-    public static void passwordInput(){
-        System.out.println("Password should contain at least one uppercase letter, at least one lowercase letter, at least one digit, at least one symbol, and no more than three consecutive lowercase letters.");
+    /**
+     * 
+     */
+    public static void passwordInput() {
+        System.out.println("Password should contain at least one uppercase letter, at least one lowercase letter, at least one digit, at least one symbol, must be 10 characters long, and no more than three consecutive lowercase letters.");
 
         System.out.println("Enter Password: ");
         boolean correctPassword = false;
         String password = "";
+        String hashedPassword = "";
+        byte[] salt = new byte[16];
+        //While the entered password doesnt fit specifications loop
         while(!correctPassword) {
             password = input.next();
             correctPassword = patternMatcherHelper(password, "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?![a-z]{4,}).{10,}$");
-            if (correctPassword)
+            if (correctPassword) {//Password fit requirements
                 System.out.println("The Password: " + correctPassword);
-            else //there was an error in the input
+                try {
+                    //Hash password with salt
+                    SecureRandom.getInstance("SHA1PRNG").nextBytes(salt);
+                    MessageDigest md = MessageDigest.getInstance("SHA-256");
+                    md.update(salt);
+                    hashedPassword = DatatypeConverter.printHexBinary(md.digest(password.getBytes()));
+    
+                    //Clearing file or creating file and Writing Hash to File appending the salt
+                    Files.write(Paths.get("password_hash.txt"), (hashedPassword + "," + DatatypeConverter.printHexBinary(salt)).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    System.err.println("Error writing password hash to file:");
+                    e.printStackTrace();
+                }
+            } else {//there was an error in the input
                 System.out.println("Enter Password: ");
+            }
         }
 
-        System.out.println("Please re-enter Password");
+        
         Scanner newInput = new Scanner(System.in);
-        String verifyPassword = newInput.next();
-
-        while(!Objects.equals(password, verifyPassword)){
-            System.out.println("Passwords do not match");
-            System.out.println("Please re-enter Password");
+        boolean passwordVerified = false;
+        String hashedFilePassword = "";
+        byte[] storedSalt = new byte[16];
+        //Get hashed password from file and split Hashed password and the stored salt
+        try {
+            Scanner passwordFile = new Scanner(new File("password_hash.txt"));
+            String[] storedHashAndSalt = passwordFile.nextLine().split(",");
+            hashedFilePassword = storedHashAndSalt[0];
+            storedSalt = DatatypeConverter.parseHexBinary(storedHashAndSalt[1]);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
+
+        //Ask user to re-enter password tell hash from file matches the hashed password from user
+        do {
+            //Prompt user to re-enter password and grab it
+            System.out.println("Please re-enter Password");
+            String verifyPassword = newInput.next();
+            try {
+                //Hash re-entered password using the stored salt from the files hashed password
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                md.update(storedSalt);
+                String hashedConfirmPassword = DatatypeConverter.printHexBinary(md.digest(verifyPassword.getBytes()));
+
+                 //Check if entered is the same as files password
+                passwordVerified = hashedFilePassword.equals(hashedConfirmPassword);
+            } catch (NoSuchAlgorithmException e) {
+                System.err.println("Error hashing password:");
+                e.printStackTrace();
+            }
+
+            if (!passwordVerified) {
+                System.out.println("Wrong Password");
+            }
+        } while (!passwordVerified);
 
         System.out.println("The Passwords match");
-
+        newInput.close();
     }
 
     public static boolean patternMatcherHelper(String str, String regex){
