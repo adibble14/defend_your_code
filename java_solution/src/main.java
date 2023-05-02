@@ -43,21 +43,24 @@ public class main {
             else //there was an error in the input
                 System.out.println("Enter First Name: ");
         }
+        System.out.println();
 
-        System.out.println("Enter Last Name: ");
         boolean correctLName = false;
+        System.out.println("Enter Last Name: ");
         while(!correctLName) {
-            String lName = input.next();
+            String lName = input.nextLine();
             correctLName = patternMatcherHelper(lName, "^([A-Za-z] ?){1,50}$");
-            if(correctLName)
+            if (correctLName){
                 System.out.println("User Last Name Input: " + lName);
-            else //there was an error in the input
+            }else if(!Objects.equals(lName, "")){
                 System.out.println("Enter Last Name: ");
+            }
         }
+        System.out.println();
     }
 
     public static void intInput(){
-        System.out.println("Integers can be positive or negative within the range of -2147 and 2147.");
+        System.out.println("Integers can be positive or negative within the range of 2147483647 and -2147483648.");
 
         System.out.println("Enter an Integer: ");
         boolean correctFirstInteger = false;
@@ -71,6 +74,7 @@ public class main {
             else //there was an error in the input
                 System.out.println("Enter an Integer: ");
         }
+        System.out.println();
 
         System.out.println("Enter a second Integer: ");
         boolean correctSecondInteger = false;
@@ -83,6 +87,7 @@ public class main {
             else //there was an error in the input
                 System.out.println("Enter a second Integer: ");
         }
+        System.out.println();
     }
 
     /**
@@ -114,6 +119,7 @@ public class main {
             else //there was an error in the input
                 System.out.println("Enter an Input File Name: ");
         }
+        System.out.println();
 
         System.out.println("Enter an Output File Name: ");
         boolean correctOutputFileName = false;
@@ -125,6 +131,7 @@ public class main {
             else //there was an error in the input
                 System.out.println("Enter an Output File Name: ");
         }
+        System.out.println();
     }
 
     /**
@@ -161,6 +168,7 @@ public class main {
                 System.out.println("Enter Password: ");
             }
         }
+        System.out.println();
 
         
         Scanner newInput = new Scanner(System.in);
