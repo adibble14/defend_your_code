@@ -1,0 +1,11 @@
+First Name: First
+Last Name: Last
+
+First Integer: 300
+Second Integer: 20
+Sum of Integers: 320
+Product of Integers: 6000
+
+Input File Name: in.txt
+Inputs files Contents: 
+It worked for now

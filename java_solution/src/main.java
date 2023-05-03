@@ -1,6 +1,9 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.BufferOverflowException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -23,12 +26,64 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class main {
     static Scanner input = new Scanner(System.in);
+    private static String fName;
+    private static String lName;
+    private static int firstInt;
+    private static int secondInt;
+    private static int finalSum;
+    private static int finalProduct;
+    private static String inputName;
+    private static String outputName;
 
     public static void main(String[] args){
         nameInput();
         intInput();
         fileInput();
         passwordInput();
+        outputToFile();
+    }
+
+    public static void outputToFile() {
+        try {
+            FileWriter fileWriter = new FileWriter(outputName, false);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write("First Name: " + fName);
+            bufferedWriter.newLine();
+            bufferedWriter.write("Last Name: " + lName);
+            bufferedWriter.newLine();
+            bufferedWriter.newLine();
+
+            bufferedWriter.write("First Integer: " + firstInt);
+            bufferedWriter.newLine();
+            bufferedWriter.write("Second Integer: " + secondInt);
+            bufferedWriter.newLine();
+            bufferedWriter.write("Sum of Integers: " + finalSum);
+            bufferedWriter.newLine();
+            bufferedWriter.write("Product of Integers: " + finalProduct);
+            bufferedWriter.newLine();
+            bufferedWriter.newLine();
+
+            bufferedWriter.write("Input File Name: " + inputName);
+            bufferedWriter.newLine();
+            bufferedWriter.write("Inputs files Contents: ");
+            bufferedWriter.newLine();
+
+            Scanner fileInput = new Scanner(new File(inputName));
+            while(fileInput.hasNextLine()) {
+                bufferedWriter.write(fileInput.nextLine());
+                bufferedWriter.newLine();
+            }
+
+            fileInput.close();
+            bufferedWriter.close();
+            fileWriter.close();
+
+            System.out.println("Content successfully written to the file: " + outputName);
+
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
     }
 
     public static void nameInput(){
@@ -37,7 +92,7 @@ public class main {
         System.out.println("Enter First Name: ");
         boolean correctFName = false;
         while(!correctFName) {
-            String fName = input.next();
+            fName = input.next();
             correctFName = patternMatcherHelper(fName, "^[A-Za-z]{1,50}$");
             if(correctFName)
                 System.out.println("User First Name Input: " + fName);
@@ -49,7 +104,7 @@ public class main {
         boolean correctLName = false;
         System.out.println("Enter Last Name: ");
         while(!correctLName) {
-            String lName = input.nextLine();
+            lName = input.nextLine();
             correctLName = patternMatcherHelper(lName, "^([A-Za-z] ?){1,50}$");
             if (correctLName){
                 System.out.println("User Last Name Input: " + lName);
@@ -61,34 +116,63 @@ public class main {
     }
 
     public static void intInput(){
-        System.out.println("Integers can be positive or negative within the range of 2147483647 and -2147483648.");
+        System.out.println("Integers can be positive or negative within the range of 2147483647 and -2147483648. The sum and product of the two integers must be between the bounds -2147483648 and 2147483647 also.");
 
-        System.out.println("Enter an Integer: ");
-        boolean correctFirstInteger = false;
-        boolean correctBounds = false;
-        while(!correctFirstInteger) {
-            String firstInt = input.next();
-            correctFirstInteger = patternMatcherHelper(firstInt, "^-?\\d{1,10}$");
-            correctBounds = checkBounds(firstInt);
-            if(correctFirstInteger && correctBounds)
-                System.out.println("First Integer Input: " + correctFirstInteger);
-            else //there was an error in the input
-                System.out.println("Enter an Integer: ");
-        }
-        System.out.println();
+        boolean sumOverflow = false, productOverflow = false;
 
-        System.out.println("Enter a second Integer: ");
-        boolean correctSecondInteger = false;
-        while(!correctSecondInteger) {
-            String secondInt = input.next();
-            correctSecondInteger = patternMatcherHelper(secondInt, "^-?\\d{1,10}$");
-            correctBounds = checkBounds(secondInt);
-            if(correctSecondInteger && correctBounds)
-                System.out.println("Second Integer Input: " + correctSecondInteger);
-            else //there was an error in the input
-                System.out.println("Enter a second Integer: ");
+        //Loop while product and sum produce a integer overflow
+        while(!sumOverflow && !productOverflow) {
+            //Obtain first int and verify
+            System.out.println("Enter an Integer: ");
+            boolean correctFirstInteger = false;
+            boolean correctBounds = false;
+            while(!correctFirstInteger || !correctBounds) {
+                String first = input.next();
+                correctFirstInteger = patternMatcherHelper(first, "^-?\\d{1,10}$");
+                correctBounds = checkBounds(first);
+                if(correctFirstInteger && correctBounds) {
+                    System.out.println("First Integer Input: " + correctFirstInteger);
+                    //Assign Integer one to global variable
+                    firstInt = Integer.parseInt(first);
+                } else { //there was an error in the input
+                    System.out.println("Enter an Integer: ");
+                }
+            }
+            System.out.println();
+
+            //Obtain second int and verify
+            System.out.println("Enter a second Integer: ");
+            boolean correctSecondInteger = false;
+            while(!correctSecondInteger || !correctBounds) {
+                String second = input.next();
+                correctSecondInteger = patternMatcherHelper(second, "^-?\\d{1,10}$");
+                correctBounds = checkBounds(second);
+                if(correctSecondInteger && correctBounds) {
+                    System.out.println("Second Integer Input: " + correctSecondInteger);
+                    //Assign Integer two to global variable
+                    secondInt = Integer.parseInt(second);
+                } else {
+                //there was an error in the input
+                    System.out.println("Enter a second Integer: ");
+                }
+            }
+            System.out.println();
+
+            //validate if sum and product of the two ints are with in bounds
+            long sum = firstInt + secondInt;
+            long product = firstInt * secondInt;
+
+            sumOverflow = checkBoundsSumOrProduct(sum);
+            productOverflow = checkBoundsSumOrProduct(product);
+
+            if(sumOverflow && productOverflow) {
+                System.out.println("Final sum is: " + sum);
+                System.out.println("Final product is: " + product);
+                //Assign sum and product to global variables
+                finalSum = (int) sum;
+                finalProduct = (int) product;
+            }
         }
-        System.out.println();
     }
 
     /**
@@ -107,13 +191,28 @@ public class main {
         return true;
     }
 
+    /**
+     *checks if sum or product is in the correct bounds
+     */
+    public static boolean checkBoundsSumOrProduct(long value){
+        if(value > 2147483647){
+            System.out.println("Given sum or product exceeds maximum allowed value.");
+            return false;
+        }else if(value < -2147483648){
+            System.out.println("Given sum or product exceeds minimum allowed value.");
+            return false;
+        }
+
+        return true;
+    }
+
     public static void fileInput(){
-        System.out.println("File Names not to exceed 20 symbols. Only alphabet, numbers, underscore accepted. Case insensitive. Only .txt files accepted");
+        System.out.println("File Names not to exceed 20 symbols. Only alphabet, numbers, underscore accepted. Case insensitive. Only .txt files accepted and .txt should be included in file name");
 
         System.out.println("Enter an Input File Name: ");
         boolean correctInputFileName = false;
         while(!correctInputFileName) {
-            String inputName = input.next();
+            inputName = input.next();
             correctInputFileName = patternMatcherHelper(inputName, "^\\w{1,20}\\.txt$");
             if (correctInputFileName)
                 System.out.println("Input file name: " + correctInputFileName);
@@ -125,7 +224,7 @@ public class main {
         System.out.println("Enter an Output File Name: ");
         boolean correctOutputFileName = false;
         while(!correctOutputFileName) {
-            String outputName = input.next();
+            outputName = input.next();
             correctOutputFileName = patternMatcherHelper(outputName, "^\\w{1,20}\\.txt$");
             if (correctOutputFileName)
                 System.out.println("Output file name: " + correctOutputFileName);
