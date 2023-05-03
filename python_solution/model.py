@@ -47,13 +47,13 @@ class Model():
         logging.info("Integer input after regex: " + num)
         if num != None:
             num = int(num)
-            if num > self.max_int_val:
+            if num >= self.max_int_val:
                 print('Given integer exceeds maximum allowed value.')
-                logging.info("{n} exceeds maximum allowed value.".format(n=num))
+                logging.warning("{n} exceeds maximum allowed value.".format(n=num))
                 num = None
-            elif num < self.min_int_val:
+            elif num <= self.min_int_val:
                 print('Given integer exceeds minimum allowed value.')
-                logging.info("{n}exceeds minimum allowed value.".format(n=num))
+                logging.warning("{n}exceeds minimum allowed value.".format(n=num))
                 num = None
         return num
     
@@ -62,10 +62,10 @@ class Model():
         logging.info("Multiplied {a} x {b}, result is {r}".format(a=self.int_A, b=self.int_B, r=result))
         if result > self.max_int_val:
             result = self.max_int_val
-            logging.info("product exceeded maximum allowed value.")
+            logging.warning("product exceeded maximum allowed value.")
         elif result < self.min_int_val:
             result = self.min_int_val
-            logging.info("product exceeded minimum allowed value.")
+            logging.warning("product exceeded minimum allowed value.")
         return result
     
     def set_input_file_name(self):
@@ -74,9 +74,9 @@ class Model():
 
     def set_output_file_name(self):
         logging.info("Setting output file name.")
-        res = self.output_file_name()
-        if self.input_file_name == self.output_file_name:
-            logging.info("output file name is same as input file name. Asking user again for output file name.")
+        res = self.file_name_helper()
+        if self.input_file_name == res:
+            logging.warning("output file name is same as input file name. Asking user again for output file name.")
             self.set_output_file_name()
         self.output_file_name = res
 
