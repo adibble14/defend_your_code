@@ -204,6 +204,7 @@ public class main {
     }
 
     public static void fileInput(){
+        System.out.println();
         System.out.println("File Names not to exceed 20 symbols. Only alphabet, numbers, underscore accepted. Case insensitive. Only .txt files accepted and .txt should be included in file name");
 
         boolean correctInputFileName = false;
@@ -218,7 +219,7 @@ public class main {
                 fileExists = Files.exists(Paths.get(inputName));
                 if (!fileExists) {
                     try {
-                        writeSpecialErrorMessage("File not found. Please enter a valid Input File Name." + inputName);
+                        writeSpecialErrorMessage("File not found. Please enter a valid Input File Name. " + inputName);
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -228,7 +229,7 @@ public class main {
                 }
             } else { // there was an error in the input
                 try {
-                    writeSpecialErrorMessage("Invalid input file name. Please follow the guidelines." + inputName);
+                    writeSpecialErrorMessage("Invalid input file name. Please follow the guidelines. " + inputName);
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -278,12 +279,9 @@ public class main {
                     SecureRandom.getInstance("SHA1PRNG").nextBytes(salt);
                     MessageDigest md = MessageDigest.getInstance("SHA-256");
                     md.update(salt);
-                    //hashedPassword = DatatypeConverter.printHexBinary(md.digest(password.getBytes()));
                     hashedPassword = Base64.getEncoder().encodeToString(md.digest(password.getBytes()));
-
     
                     //Clearing file or creating file and Writing Hash to File appending the salt
-                    //Files.write(Paths.get("password_hash.txt"), (hashedPassword + "," + DatatypeConverter.printHexBinary(salt)).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                     Files.write(Paths.get("password_hash.txt"), (hashedPassword + "," + Base64.getEncoder().encodeToString(salt)).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
                 } catch (IOException | NoSuchAlgorithmException e) {
@@ -315,7 +313,6 @@ public class main {
             Scanner passwordFile = new Scanner(new File("password_hash.txt"));
             String[] storedHashAndSalt = passwordFile.nextLine().split(",");
             hashedFilePassword = storedHashAndSalt[0];
-            //storedSalt = DatatypeConverter.parseHexBinary(storedHashAndSalt[1]);
             storedSalt = Base64.getDecoder().decode(storedHashAndSalt[1]);
         } catch (FileNotFoundException e) {
             try {
@@ -336,11 +333,9 @@ public class main {
                 //Hash re-entered password using the stored salt from the files hashed password
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
                 md.update(storedSalt);
-                //String hashedConfirmPassword = DatatypeConverter.printHexBinary(md.digest(verifyPassword.getBytes()));
                 String hashedConfirmPassword = Base64.getEncoder().encodeToString(md.digest(verifyPassword.getBytes()));
 
-
-                 //Check if entered is the same as files password
+                //Check if entered is the same as files password
                 passwordVerified = hashedFilePassword.equals(hashedConfirmPassword);
             } catch (NoSuchAlgorithmException e) {
                 try{
