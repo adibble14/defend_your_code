@@ -1,0 +1,11 @@
+First Name: First
+Last Name: Last
+
+First Integer: -20
+Second Integer: -20
+Sum of Integers: -40
+Product of Integers: 400
+
+Input File Name: in.txt
+Inputs files Contents: 
+It worked

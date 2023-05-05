@@ -207,16 +207,26 @@ public class main {
     public static void fileInput(){
         System.out.println("File Names not to exceed 20 symbols. Only alphabet, numbers, underscore accepted. Case insensitive. Only .txt files accepted and .txt should be included in file name");
 
-        System.out.println("Enter an Input File Name: ");
         boolean correctInputFileName = false;
-        while(!correctInputFileName) {
+        boolean fileExists = false;
+
+        while (!correctInputFileName || !fileExists) {
+            System.out.println("Enter an Input File Name: ");
             inputName = input.next();
             correctInputFileName = patternMatcherHelper(inputName, "^\\w{1,20}\\.txt$");
-            if (correctInputFileName)
-                System.out.println("Input file name: " + correctInputFileName);
-            else //there was an error in the input
-                System.out.println("Enter an Input File Name: ");
+
+            if (correctInputFileName) {
+                fileExists = Files.exists(Paths.get(inputName));
+                if (fileExists) {
+                    System.out.println("Input file name: " + inputName);
+                } else {
+                    System.out.println("File not found. Please enter a valid Input File Name.");
+                }
+            } else { // there was an error in the input
+                System.out.println("Invalid input file name. Please follow the guidelines.");
+            }
         }
+
         System.out.println();
 
         System.out.println("Enter an Output File Name: ");
