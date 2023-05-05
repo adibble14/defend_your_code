@@ -13,7 +13,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Base64;
-import java.util.Objects;
 
 
 /**
@@ -47,6 +46,7 @@ public class main {
         fileInput();
         passwordInput();
         outputToFile();
+        errorWriter.close();
         errorLog.close();
     }
 
@@ -67,7 +67,6 @@ public class main {
                     e.printStackTrace();
                 }
                 System.out.println("Enter First Name: ");
-                input.nextLine();
             }
         }
         System.out.println();
