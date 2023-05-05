@@ -1,10 +1,10 @@
-First Name: First
-Last Name: Last
+First Name: andrew
+Last Name: dibble
 
-First Integer: 20
-Second Integer: 30
-Sum of Integers: 50
-Product of Integers: 600
+First Integer: 123
+Second Integer: 321
+Sum of Integers: 444
+Product of Integers: 39483
 
 Input File Name: in.txt
 Inputs files Contents: 

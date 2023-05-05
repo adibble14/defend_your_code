@@ -13,6 +13,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Base64;
+import java.util.Objects;
 
 
 /**
@@ -78,7 +79,7 @@ public class main {
             correctLName = patternMatcherHelper(lName, "^([A-Za-z] ?){1,50}$");
             if (correctLName){
                 System.out.println("User Last Name Input: " + lName);
-            }else{
+            }else if(!Objects.equals(lName,"")){
                 System.out.println("Enter Last Name: ");
                 try{
                     writeErrorMessage("last name", lName);

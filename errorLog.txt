@@ -1,5 +1,0 @@
-Error with last name input, value: 
-Error with first integer input, value: 0
-Invalid input file name. Please follow the guidelines.in
-File not found. Please enter a valid Input File Name.input.txt
-Passwords did not match
