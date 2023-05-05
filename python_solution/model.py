@@ -1,6 +1,7 @@
 from logger import logging
 import regex
 import hasher
+import sys
 
 
 
@@ -16,7 +17,7 @@ class Model():
         self.int_B = None
         self.input_file_name = None
         self.output_file_name = None
-        self.password = None
+        self.password_set = False
 
     def set_first_name(self):
         print("First Name must consist of only alphabetical symbols. Upper and lower case is fine. Maximum 50 symbols.")
@@ -90,5 +91,25 @@ class Model():
         print("Password should contain at least one uppercase letter, at least one lowercase letter, at least one digit, at least one symbol, and no more than three consecutive lowercase letters.")
         res = input("Enter password: ")
         logging.info("Given password: " + res)
-        self.password = regex.password_regex(res)
-        return self.password
+        p_word = regex.password_regex(res)
+        if p_word == None:
+            return
+        self.write_password(p_word)
+
+    def write_password(self, str):
+        salt = hasher.get_salt()
+        hashed_p_word = hasher.hash(str + salt)
+        try:
+            logging.info("Writing salt and hashed password to files.")
+            p_file = open('noPasswordsHere.txt', 'w')
+            s_file = open('pepper.txt', 'w')
+
+            p_file.write(hashed_p_word)
+            s_file.write(salt)
+
+            p_file.close()
+            s_file.close()
+        except OSError:
+            logging.critical("Failed to create password file.")
+            sys.exit(-1)
+        self.password_set = True

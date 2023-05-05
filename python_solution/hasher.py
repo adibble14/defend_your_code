@@ -15,6 +15,7 @@ def get_salt():
         return salt
     
 def hash(str):
-    return hashlib.sha256(b"str").hexdigest()
+    p = str
+    return hashlib.sha256(p.encode()).hexdigest()
 
 

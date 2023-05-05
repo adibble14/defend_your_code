@@ -21,7 +21,7 @@ def main():
         MODEL.set_input_file_name()
     while MODEL.output_file_name == None:
         MODEL.set_output_file_name()
-    while MODEL.password == None:
+    while MODEL.password_set == False:
         MODEL.set_password()
     
 
