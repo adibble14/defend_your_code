@@ -67,6 +67,7 @@ public class main {
                     e.printStackTrace();
                 }
                 System.out.println("Enter First Name: ");
+                input.nextLine();
             }
         }
         System.out.println();
@@ -206,22 +207,36 @@ public class main {
     public static void fileInput(){
         System.out.println("File Names not to exceed 20 symbols. Only alphabet, numbers, underscore accepted. Case insensitive. Only .txt files accepted and .txt should be included in file name");
 
-        System.out.println("Enter an Input File Name: ");
         boolean correctInputFileName = false;
-        while(!correctInputFileName) {
+        boolean fileExists = false;
+
+        while (!correctInputFileName || !fileExists) {
+            System.out.println("Enter an Input File Name: ");
             inputName = input.next();
             correctInputFileName = patternMatcherHelper(inputName, "^\\w{1,20}\\.txt$");
-            if (correctInputFileName)
-                System.out.println("Input file name: " + inputName);
-            else { //there was an error in the input
-                System.out.println("Enter an Input File Name: ");
-                try{
-                    writeErrorMessage("input file", inputName);
-                }catch (Exception e){
+
+            if (correctInputFileName) {
+                fileExists = Files.exists(Paths.get(inputName));
+                if (!fileExists) {
+                    try {
+                        writeSpecialErrorMessage("File not found. Please enter a valid Input File Name." + inputName);
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Input file name: " + inputName);
+                }
+            } else { // there was an error in the input
+                try {
+                    writeSpecialErrorMessage("Invalid input file name. Please follow the guidelines." + inputName);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
         }
+
         System.out.println();
 
         System.out.println("Enter an Output File Name: ");
@@ -234,7 +249,7 @@ public class main {
             else { //there was an error in the input
                 System.out.println("Enter an Output File Name: ");
                 try{
-                    writeErrorMessage("output file", outputName);
+                    writeErrorMessage("Output file doesnt fit requirements: ", outputName);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -283,7 +298,7 @@ public class main {
             } else {//there was an error in the input
                 System.out.println("Enter Password: ");
                 try{
-                    writeErrorMessage("password", password);
+                    writeErrorMessage("Password doesnt fit requirements: ", password);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -304,6 +319,12 @@ public class main {
             //storedSalt = DatatypeConverter.parseHexBinary(storedHashAndSalt[1]);
             storedSalt = Base64.getDecoder().decode(storedHashAndSalt[1]);
         } catch (FileNotFoundException e) {
+            try {
+                writeSpecialErrorMessage("Password File Not Found");
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
 
@@ -395,9 +416,11 @@ public class main {
     public static void writeErrorMessage(String inputType, String value) throws IOException {
         errorWriter.write("Error with "+inputType+" input, value: " + value); errorWriter.newLine();
     }
+
     public static void writeSpecialErrorMessage(String value) throws IOException {
         errorWriter.write(value); errorWriter.newLine();
     }
+
     public static boolean patternMatcherHelper(String str, String regex){
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
