@@ -78,7 +78,7 @@ public class main {
             correctLName = patternMatcherHelper(lName, "^([A-Za-z] ?){1,50}$");
             if (correctLName){
                 System.out.println("User Last Name Input: " + lName);
-            }else if(!Objects.equals(lName, "")){
+            }else{
                 System.out.println("Enter Last Name: ");
                 try{
                     writeErrorMessage("last name", lName);
