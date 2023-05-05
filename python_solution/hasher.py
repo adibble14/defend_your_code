@@ -4,6 +4,8 @@ import secrets
 import string
 import hashlib
 
+''' Sometimes returns None
+
 def get_salt():
     alphabet = string.ascii_letters + string.digits
     while True:
@@ -13,6 +15,11 @@ def get_salt():
             and sum(c.isdigit() for c in salt) >= 3):
             break
         return salt
+'''
+
+def get_salt():
+    alphabet = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(alphabet) for i in range(10))
     
 def hash(str):
     p = str

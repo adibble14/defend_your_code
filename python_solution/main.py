@@ -13,7 +13,9 @@ def main():
         MODEL.set_first_name()
     while MODEL.last_name == None:
         MODEL.set_last_name()
-    while MODEL.multiply() == MODEL.max_int_val:
+
+    handle_ints(MODEL)
+    while MODEL.multiply() == MODEL.max_int_val or MODEL.add() == MODEL.max_int_val:
         MODEL.int_A = None
         MODEL.int_B = None
         handle_ints(MODEL)
@@ -26,6 +28,7 @@ def main():
     passwords_match = False
     while passwords_match == False:
         passwords_match = MODEL.check_password()
+    MODEL.write_to_file()
 
 def handle_ints(MODEL):
     while MODEL.int_A == None:

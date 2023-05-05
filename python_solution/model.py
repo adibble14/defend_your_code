@@ -13,8 +13,8 @@ class Model():
         self.min_int_val = -2147483648
         self.first_name = None
         self.last_name = None
-        self.int_A = self.max_int_val
-        self.int_B = self.max_int_val
+        self.int_A = None
+        self.int_B = None
         self.input_file_name = None
         self.output_file_name = None
         self.password_set = False
@@ -38,9 +38,11 @@ class Model():
         return self.last_name
     
     def set_first_int(self):
+        print("Give your first integer!")
         self.int_A = self.set_int_helper()
 
     def set_second_int(self):
+        print("Give your second integer!")
         self.int_B = self.set_int_helper()
 
 
@@ -74,9 +76,10 @@ class Model():
             result = self.max_int_val
             print("Underflow occured, reenter integers.")
             logging.warning("product exceeded minimum allowed value.")
+        self.product = result
         return result
     
-    def sum(self):
+    def add(self):
         print('Adding integers.')
         result = self.int_A + self.int_B
         logging.info("Added {a} + {b}, result is {r}".format(a=self.int_A, b=self.int_B, r=result))
@@ -88,17 +91,21 @@ class Model():
             result = self.max_int_val
             print("Underflow occured, reenter integers.")
             logging.warning("Sum exceeded minimum allowed value.")
+        self.sum = result
         return result
     
     def set_input_file_name(self):
         logging.info("Setting input file name.")
+        print("Enter the name of your input file!")
         self.input_file_name = self.file_name_helper()
 
     def set_output_file_name(self):
         logging.info("Setting output file name.")
+        print("Enter the name of your output file!")
         res = self.file_name_helper()
         if self.input_file_name == res:
             logging.warning("output file name is same as input file name. Asking user again for output file name.")
+            print("The input and output file names must be different!")
             self.set_output_file_name()
         self.output_file_name = res
 
@@ -141,19 +148,11 @@ class Model():
         logging.info("User did not reenter password correctly")
         return False
     
-    '''
-    opens the output file and
-writes the user's name
-writes the result of adding the two integer values (no overflow should occur)
-writes the result of multiplying the two integer values (no overflow should occur),
-writes the contents of the input file
-Each thing written should be clearly labeled (e.g. First name, Last name, First Integer, Second Integer, Sum, Product, Input File Name, Input file contents)
-NOTE: it is ok to echo output to the screen as you wish
-'''
     def write_to_file(self):
         logging.info('Writing everything to output file.')
+        print("Generating the output file!")
         input_text = fileHandler.read_file(self.input_file_name)
-        outward_text = f"Name: {self.first_name} {self.last_name}\n Sum of Integers: {self.int_A} + {self.int_B} = {self.sum}\n Product of Integers {self.int_A} * {self.int_B} = {self.product}\n Input file contents: {input_text}"
+        outward_text = f"Name: {self.first_name} {self.last_name}\nSum of Integers: {self.int_A} + {self.int_B} = {self.sum}\nProduct of Integers {self.int_A} * {self.int_B} = {self.product}\nInput file contents:\n {input_text}"
         fileHandler.create_file(self.output_file_name, outward_text)
 
 

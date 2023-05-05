@@ -1,0 +1,8 @@
+Name: Mario Flores
+Sum of Integers: -978 + 3245 = 2267
+Product of Integers -978 * 3245 = -3173610
+Input file contents:
+ This is a demo
+text file
+to read
+in
