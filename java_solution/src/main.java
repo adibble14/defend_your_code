@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.BufferOverflowException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -13,9 +12,8 @@ import java.security.SecureRandom;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Base64;
 import java.util.Objects;
-
-import javax.xml.bind.DatatypeConverter;
 
 
 /**
@@ -256,10 +254,14 @@ public class main {
                     SecureRandom.getInstance("SHA1PRNG").nextBytes(salt);
                     MessageDigest md = MessageDigest.getInstance("SHA-256");
                     md.update(salt);
-                    hashedPassword = DatatypeConverter.printHexBinary(md.digest(password.getBytes()));
+                    //hashedPassword = DatatypeConverter.printHexBinary(md.digest(password.getBytes()));
+                    hashedPassword = Base64.getEncoder().encodeToString(md.digest(password.getBytes()));
+
     
                     //Clearing file or creating file and Writing Hash to File appending the salt
-                    Files.write(Paths.get("password_hash.txt"), (hashedPassword + "," + DatatypeConverter.printHexBinary(salt)).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                    //Files.write(Paths.get("password_hash.txt"), (hashedPassword + "," + DatatypeConverter.printHexBinary(salt)).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                    Files.write(Paths.get("password_hash.txt"), (hashedPassword + "," + Base64.getEncoder().encodeToString(salt)).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
                 } catch (IOException | NoSuchAlgorithmException e) {
                     System.err.println("Error writing password hash to file:");
                     e.printStackTrace();
@@ -280,7 +282,8 @@ public class main {
             Scanner passwordFile = new Scanner(new File("password_hash.txt"));
             String[] storedHashAndSalt = passwordFile.nextLine().split(",");
             hashedFilePassword = storedHashAndSalt[0];
-            storedSalt = DatatypeConverter.parseHexBinary(storedHashAndSalt[1]);
+            //storedSalt = DatatypeConverter.parseHexBinary(storedHashAndSalt[1]);
+            storedSalt = Base64.getDecoder().decode(storedHashAndSalt[1]);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -294,7 +297,9 @@ public class main {
                 //Hash re-entered password using the stored salt from the files hashed password
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
                 md.update(storedSalt);
-                String hashedConfirmPassword = DatatypeConverter.printHexBinary(md.digest(verifyPassword.getBytes()));
+                //String hashedConfirmPassword = DatatypeConverter.printHexBinary(md.digest(verifyPassword.getBytes()));
+                String hashedConfirmPassword = Base64.getEncoder().encodeToString(md.digest(verifyPassword.getBytes()));
+
 
                  //Check if entered is the same as files password
                 passwordVerified = hashedFilePassword.equals(hashedConfirmPassword);

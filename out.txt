@@ -1,10 +1,10 @@
 First Name: First
 Last Name: Last
 
-First Integer: 300
-Second Integer: 20
-Sum of Integers: 320
-Product of Integers: 6000
+First Integer: 20
+Second Integer: -20
+Sum of Integers: 0
+Product of Integers: -400
 
 Input File Name: in.txt
 Inputs files Contents: 
