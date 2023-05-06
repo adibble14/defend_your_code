@@ -1,6 +1,6 @@
 Name: Mario Flores
-Sum of Integers: -978 + 3245 = 2267
-Product of Integers -978 * 3245 = -3173610
+Sum of Integers: 12345 + 12345 = 24690
+Product of Integers 12345 * 12345 = 152399025
 Input file contents:
  This is a demo
 text file

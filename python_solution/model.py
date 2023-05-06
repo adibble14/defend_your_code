@@ -26,14 +26,14 @@ class Model():
     def set_first_name(self):
         print("First Name must consist of only alphabetical symbols. Upper and lower case is fine. Maximum 50 symbols.")
         res = input("Enter First Name: ")
-        logging.info("User First Name Input: " + res)
+        logging.info(f"User First Name Input: {res}")
         self.first_name = regex.first_name_regex(res)
         return self.first_name
     
     def set_last_name(self):
         print("Last Name must consist of only alphabetical symbols and spaces. Upper and lower case is fine. Maximum 50 symbols.")
         res = input("Enter Last Name: ")
-        logging.info("User Last Name Input: " + res)
+        logging.info(f"User Last Name Input: {res}")
         self.last_name = regex.last_name_regex(res)
         return self.last_name
     
@@ -49,18 +49,18 @@ class Model():
     def set_int_helper(self):
         print("Integers can be positive or negative.")
         res = input("Enter an integer: ")
-        logging.info("User integer input: " + res)
+        logging.info(f"User integer input: {res}")
         num = regex.integer_regex(res)
-        logging.info("Integer input after regex: " + num)
+        logging.info(f"Integer input after regex: {num}")
         if num != None:
             num = int(num)
             if num >= self.max_int_val:
                 print('Given integer exceeds maximum allowed value.')
-                logging.warning("{n} exceeds maximum allowed value.".format(n=num))
+                logging.warning(f"{num} exceeds maximum allowed value.")
                 num = None
             elif num <= self.min_int_val:
                 print('Given integer exceeds minimum allowed value.')
-                logging.warning("{n}exceeds minimum allowed value.".format(n=num))
+                logging.warning(f"{num} exceeds minimum allowed value.")
                 num = None
         return num
     
@@ -112,13 +112,13 @@ class Model():
     def file_name_helper(self):
         print("File Name not to exceed 20 symbols. Only alphabet, numbers, undersore accepted. Case insensitive. Only .txt files accepted")
         res = input("Enter file name: ")
-        logging.info("Given file name: " + res)
+        logging.info(f"Given file name: {res}")
         return regex.file_name_regex(res)
     
     def set_password(self):
         print("Password should contain at least one uppercase letter, at least one lowercase letter, at least one digit, at least one symbol, and no more than three consecutive lowercase letters.")
         res = input("Enter password: ")
-        logging.info("Given password: " + res)
+        logging.info(f"Given password: {res}")
         p_word = regex.password_regex(res)
         if p_word == None:
             print('Password not accepted.')
@@ -134,7 +134,7 @@ class Model():
 
     def check_password(self):
         res = input("Reenter password: ")
-        logging.info("Given password: " + res)
+        logging.info(f"Given password: {res}")
         p_word = regex.password_regex(res)
         if p_word == None:
             print('Password not accepted.')
