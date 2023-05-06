@@ -28,6 +28,11 @@ public class main {
     private static FileWriter errorLog;
     private static BufferedWriter errorWriter;
 
+    /**
+     * main method to start the program, calls all the various methods to take user input
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         try {
             errorLog = new FileWriter("errorLog.txt", false);
@@ -44,6 +49,9 @@ public class main {
         errorLog.close();
     }
 
+    /**
+     * gets the name input from the user
+     */
     public static void nameInput() {
         System.out.println(
                 "First and Last Name must consist of only alphabetical symbols. Upper and lower case is fine. Maximum 50 symbols.");
@@ -85,11 +93,12 @@ public class main {
         System.out.println();
     }
 
+    /**
+     * gets the integer input from the user, also calculates the sum and product of them
+     */
     public static void intInput() {
         System.out.println(
                 "Integers can be positive or negative within the range of 2147483647 and -2147483648. The sum and product of the two integers must be between the bounds -2147483648 and 2147483647 also.");
-
-        boolean sumOverflow = false, productOverflow = false;
 
         // Obtain first int and verify
         System.out.println("Enter an Integer: ");
@@ -192,6 +201,11 @@ public class main {
         return true;
     }
 
+    /**
+     * checks if the sum of the two integers is in the correct bounds
+     * @param value the second integer inputted
+     * @return a boolean
+     */
     public static boolean checkBoundsSum(int value) {
         try {
             Math.addExact(firstInt, value);
@@ -206,6 +220,11 @@ public class main {
         return true;
     }
 
+    /**
+     * checks if the product of the two integers is in the correct bounds
+     * @param value the second integer inputted
+     * @return a boolean
+     */
     public static boolean checkBoundsProduct(int value) {
         try {
             Math.multiplyExact(firstInt, value);
@@ -220,6 +239,9 @@ public class main {
         return true;
     }
 
+    /**
+     * gets the file input from the user
+     */
     public static void fileInput() {
         System.out.println();
         System.out.println(
@@ -239,7 +261,6 @@ public class main {
                     try {
                         writeSpecialErrorMessage("File not found. Please enter a valid Input File Name. " + inputName);
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     System.out.println("File not found. Please enter a valid Input File Name.");
@@ -250,7 +271,6 @@ public class main {
                 try {
                     writeSpecialErrorMessage("Invalid input file name. Please follow the guidelines. " + inputName);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -281,7 +301,6 @@ public class main {
                     writeSpecialErrorMessage(
                             "Invalid input file name. Output file name equaled input file name: " + inputName);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -290,7 +309,7 @@ public class main {
     }
 
     /**
-     * 
+     * gets the password input from the user, asks to re-enter password, and verifies their hash value matches
      */
     public static void passwordInput() {
         System.out.println(
@@ -352,7 +371,6 @@ public class main {
             try {
                 writeSpecialErrorMessage("Password File Not Found");
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
             e.printStackTrace();
@@ -395,6 +413,9 @@ public class main {
         newInput.close();
     }
 
+    /**
+     * outputting to the specified output file
+     */
     public static void outputToFile() {
         try {
             FileWriter fileWriter = new FileWriter(outputName, false);
@@ -442,16 +463,30 @@ public class main {
         }
     }
 
+    /**
+     * adding an error message to the error log file
+     * @param inputType
+     * @param value
+     * @throws IOException
+     */
     public static void writeErrorMessage(String inputType, String value) throws IOException {
         errorWriter.write("Error with " + inputType + " input, value: " + value);
         errorWriter.newLine();
     }
 
+    /**
+     * adding a special error message to the log file
+     * @param value
+     * @throws IOException
+     */
     public static void writeSpecialErrorMessage(String value) throws IOException {
         errorWriter.write(value);
         errorWriter.newLine();
     }
 
+    /**
+     * checking if a string matches with a specified regex
+     */
     public static boolean patternMatcherHelper(String str, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
